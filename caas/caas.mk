@@ -46,6 +46,7 @@ TARGET_DEVICE := $(shell basename $(TARGET_DEVICE_DIR))
 $(call inherit-product, $(SRC_TARGET_DIR)/product/aosp_base.mk)
 $(call inherit-product, $(SRC_TARGET_DIR)/product/core_64_bit.mk)
 $(call inherit-product, $(LOCAL_PATH)/device.mk)
+$(call inherit-product, $(SRC_TARGET_DIR)/product/window_extensions.mk)
 
 PRODUCT_NAME := caas
 PRODUCT_DEVICE := caas
@@ -65,5 +66,5 @@ PRODUCT_SET_DEBUGFS_RESTRICTIONS := false
 else
 PRODUCT_SET_DEBUGFS_RESTRICTIONS := true
 endif
-PRODUCT_SHIPPING_API_LEVEL := 33
+PRODUCT_SHIPPING_API_LEVEL := 34
 PRODUCT_OTA_ENFORCE_VINTF_KERNEL_REQUIREMENTS := true

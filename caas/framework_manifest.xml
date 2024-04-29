@@ -42,15 +42,10 @@
         <version>1</version>
         <fqname>IHealth/default</fqname>
     </hal-->
-    <hal format="hidl">
+    <hal format="aidl">
         <name>android.hardware.thermal</name>
-        <transport>hwbinder</transport>
-        <version>1.0</version>
-        <version>2.0</version>
-        <interface>
-            <name>IThermal</name>
-            <instance>default</instance>
-        </interface>
+        <version>1</version>
+        <fqname>IThermal/default</fqname>
     </hal>
     <hal format="aidl">
         <name>android.hardware.gatekeeper</name>
@@ -98,40 +93,6 @@
         </interface>
     </hal>
     <hal format="hidl">
-        <name>android.hardware.graphics.composer</name>
-        <transport>hwbinder</transport>
-        <version>2.4</version>
-        <interface>
-            <name>IComposer</name>
-            <instance>default</instance>
-        </interface>
-    </hal>
-    <hal format="aidl" optional="true">
-         <name>android.hardware.wifi.supplicant</name>
-         <version>1</version>
-         <interface>
-             <name>ISupplicant</name>
-             <instance>default</instance>
-         </interface>
-    </hal>
-    <hal format="hidl">
-        <name>android.hardware.wifi</name>
-        <transport>hwbinder</transport>
-        <version>1.5</version>
-        <interface>
-            <name>IWifi</name>
-            <instance>default</instance>
-        </interface>
-    </hal>
-    <hal format="aidl" optional="true">
-        <name>android.hardware.wifi.hostapd</name>
-        <version>1</version>
-        <interface>
-            <name>IHostapd</name>
-            <instance>default</instance>
-        </interface>
-    </hal>
-    <hal format="hidl">
         <name>android.hardware.media.omx</name>
         <transport>hwbinder</transport>
         <version>1.0</version>
@@ -158,24 +119,10 @@
             <instance>default</instance>
         </interface>
     </hal>
-    <hal format="hidl">
+    <hal format="aidl">
         <name>android.hardware.camera.provider</name>
-        <transport>hwbinder</transport>
-        <version>2.4</version>
-        <interface>
-            <name>ICameraProvider</name>
-            <instance>external/0</instance>
-        </interface>
+	<fqname>ICameraProvider/external/0</fqname>
     </hal>
-    <!--hal format="hidl">
-        <name>android.hardware.boot</name>
-        <transport>hwbinder</transport>
-        <version>1.2</version>
-        <interface>
-            <name>IBootControl</name>
-            <instance>default</instance>
-        </interface>
-    </hal-->
     <hal format="hidl">
         <name>android.hardware.renderscript</name>
         <transport arch="32+64">passthrough</transport>
@@ -185,7 +132,7 @@
             <instance>default</instance>
         </interface>
     </hal>
-    <!--vendor-ndk>
-        <version>33</version>
-    </vendor-ndk-->
+    <vendor-ndk>
+        <version>34</version>
+    </vendor-ndk>
 </manifest>

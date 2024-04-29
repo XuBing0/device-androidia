@@ -22,6 +22,7 @@ TARGET_NO_RECOVERY := true
 BOARD_USES_RECOVERY_AS_BOOT := true
 BOARD_SLOT_AB_ENABLE := true
 BOARD_KERNEL_CMDLINE += rootfstype=ext4
+BOARD_SEPOLICY_DIRS += $(INTEL_PATH_SEPOLICY)/slot-ab
 
 AB_OTA_POSTINSTALL_CONFIG += \
     RUN_POSTINSTALL_vendor=true \
@@ -62,7 +63,7 @@ TARGET_RECOVERY_PIXEL_FORMAT := "BGRA_8888"
 #
 
 # NOTE: These values must be kept in sync with BOARD_GPT_INI
-BOARD_BOOTIMAGE_PARTITION_SIZE ?= 42991616
+BOARD_BOOTIMAGE_PARTITION_SIZE ?= 47185920
 SYSTEM_PARTITION_SIZE = $(shell echo 2560*1024*1024 | bc)
 BOARD_TOSIMAGE_PARTITION_SIZE := 10485760
 BOARD_BOOTLOADER_PARTITION_SIZE ?= $$((33 * 1024 * 1024))
@@ -176,9 +177,7 @@ BOARD_WLAN_DEVICE := iwlwifi
 
 BOARD_WPA_SUPPLICANT_PRIVATE_LIB ?= lib_driver_cmd_intc
 
-BOARD_SEPOLICY_DIRS += $(INTEL_PATH_SEPOLICY)/wlan/load_iwlwifi
-
-BOARD_SEPOLICY_M4DEFS += module_iwlwifi=true
+BOARD_SEPOLICY_DIRS += $(INTEL_PATH_SEPOLICY)/wlan/load_iwl_modules
 BOARD_SEPOLICY_DIRS += $(INTEL_PATH_SEPOLICY)/wlan/iwlwifi
 WIFI_HIDL_UNIFIED_SUPPLICANT_SERVICE_RC_ENTRY := true
 ##############################################################
@@ -193,8 +192,10 @@ ifeq ($(BASE_LTS2021_CHROMIUM_KERNEL), true)
   TARGET_BOARD_KERNEL_HEADERS := $(INTEL_PATH_COMMON)/kernel/lts2021-chromium/kernel-headers
 else ifeq ($(BASE_LINUX_INTEL_LTS2021_KERNEL), true)
   TARGET_BOARD_KERNEL_HEADERS := $(INTEL_PATH_COMMON)/kernel/linux-intel-lts2021/kernel-headers
+else ifeq ($(BASE_LINUX_INTEL_LTS2022_KERNEL), true)
+  TARGET_BOARD_KERNEL_HEADERS := $(INTEL_PATH_COMMON)/kernel/linux-intel-lts2022/kernel-headers
 else
-  TARGET_BOARD_KERNEL_HEADERS := $(INTEL_PATH_COMMON)/kernel/lts2021-chromium/kernel-headers
+  TARGET_BOARD_KERNEL_HEADERS := $(INTEL_PATH_COMMON)/kernel/lts2022-chromium/kernel-headers
 endif
 
 ifneq ($(TARGET_BUILD_VARIANT),user)
@@ -455,7 +456,6 @@ AB_OTA_PARTITIONS += odm
 BUILD_CPU_ARCH ?= silvermont
 
 # Items that are common between slm 32b and 64b:
-TARGET_CPU_ABI_LIST_32_BIT := x86
 TARGET_ARCH_VARIANT := $(if $(BUILD_CPU_ARCH),$(BUILD_CPU_ARCH),x86)
 TARGET_CPU_VARIANT := generic
 TARGET_CPU_SMP := true
@@ -464,10 +464,6 @@ ifeq ($(BOARD_USE_64BIT_USERSPACE),true)
 # 64b-specific items:
 TARGET_ARCH := x86_64
 TARGET_CPU_ABI := x86_64
-TARGET_2ND_CPU_ABI := x86
-TARGET_2ND_ARCH := x86
-TARGET_2ND_ARCH_VARIANT := $(if $(BUILD_CPU_ARCH),$(BUILD_CPU_ARCH))
-TARGET_2ND_CPU_VARIANT := generic
 else
 # 32b-specific items:
 TARGET_ARCH := x86
@@ -493,10 +489,6 @@ TARGET_USE_PRIVATE_LIBDRM := true
 LIBDRM_VER ?= intel
 
 BOARD_KERNEL_CMDLINE += vga=current i915.modeset=1 drm.atomic=1 i915.nuclear_pageflip=1 drm.vblankoffdelay=1 i915.fastboot=1
-
-ifeq ($(BASE_LINUX_INTEL_LTS2021_KERNEL),true)
-BOARD_KERNEL_CMDLINE += i915.enable_guc=1
-endif
 
 USE_OPENGL_RENDERER := true
 USE_INTEL_UFO_DRIVER := false
@@ -530,6 +522,7 @@ BOARD_SEPOLICY_DIRS += $(INTEL_PATH_SEPOLICY)/graphics/mesa
 
 BOARD_SEPOLICY_M4DEFS += module_hwc_info_service=true
 
+BOARD_SEPOLICY_DIRS += $(INTEL_PATH_SEPOLICY)/graphics/composer3
 ##############################################################
 # Source: device/intel/mixins/groups/ethernet/dhcp/BoardConfig.mk
 ##############################################################
@@ -723,17 +716,13 @@ BOARD_SEPOLICY_DIRS += $(INTEL_PATH_SEPOLICY)/sensors/mediation
 # Source: device/intel/mixins/groups/houdini/true/BoardConfig.mk
 ##############################################################
 # Native Bridge ABI List
-NB_ABI_LIST_32_BIT := armeabi-v7a armeabi
+# NB_ABI_LIST_32_BIT := armeabi-v7a armeabi
 NB_ABI_LIST_64_BIT := arm64-v8a
 # Support 64 Bit Apps
 TARGET_CPU_ABI_LIST_64_BIT ?= $(TARGET_CPU_ABI) $(TARGET_CPU_ABI2)
-TARGET_CPU_ABI_LIST_32_BIT ?= $(TARGET_2ND_CPU_ABI) $(TARGET_2ND_CPU_ABI2)
 TARGET_CPU_ABI_LIST := \
     $(TARGET_CPU_ABI_LIST_64_BIT) \
-    $(TARGET_CPU_ABI_LIST_32_BIT) \
-    $(NB_ABI_LIST_64_BIT) \
-    $(NB_ABI_LIST_32_BIT)
-TARGET_CPU_ABI_LIST_32_BIT += $(NB_ABI_LIST_32_BIT)
+    $(NB_ABI_LIST_64_BIT)
 TARGET_CPU_ABI_LIST_64_BIT += $(NB_ABI_LIST_64_BIT)
 
 BOARD_SEPOLICY_DIRS += $(INTEL_PATH_SEPOLICY)/houdini

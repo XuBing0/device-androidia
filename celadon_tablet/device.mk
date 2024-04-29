@@ -27,9 +27,8 @@ PRODUCT_PACKAGES += \
     libavb \
     update_engine_sideload \
     avbctl \
-    android.hardware.boot@1.2-impl-intel \
-    android.hardware.boot@1.2-impl-intel.recovery \
-    android.hardware.boot@1.2-service \
+    android.hardware.boot-service.intel \
+    android.hardware.boot-service.recovery \
     bootctrl.intel \
     bootctrl.intel.recovery
 
@@ -132,7 +131,7 @@ PRODUCT_PACKAGES += \
     TetheringConfigOverlayGsi
 
 PRODUCT_PACKAGES += \
-    android.hardware.wifi@1.0-service
+    android.hardware.wifi-service
 
 #copy iwlwifi wpa config files
 PRODUCT_COPY_FILES += \
@@ -141,9 +140,12 @@ PRODUCT_COPY_FILES += \
     $(INTEL_PATH_COMMON)/wlan/iwlwifi/p2p_supplicant_overlay.conf:vendor/etc/wifi/p2p_supplicant_overlay.conf \
     frameworks/native/data/etc/android.hardware.wifi.xml:vendor/etc/permissions/android.hardware.wifi.xml \
     frameworks/native/data/etc/android.hardware.wifi.direct.xml:vendor/etc/permissions/android.hardware.wifi.direct.xml \
+    frameworks/native/data/etc/android.hardware.wifi.passpoint.xml:vendor/etc/permissions/android.hardware.wifi.passpoint.xml \
     frameworks/native/data/etc/android.software.ipsec_tunnels.xml:vendor/etc/permissions/android.software.ipsec_tunnels.xml
 
 PRODUCT_PACKAGE_OVERLAYS += $(INTEL_PATH_COMMON)/wlan/overlay-disable_keepalive_offload
+
+PRODUCT_COPY_FILES += $(LOCAL_PATH)/extra_files/wlan/load_iwl_modules.sh:vendor/bin/load_iwl_modules.sh
 ##############################################################
 # Source: device/intel/mixins/groups/kernel/gmin64/product.mk.1
 ##############################################################
@@ -463,9 +465,8 @@ PRODUCT_COPY_FILES += \
 
 
 # External camera service
-PRODUCT_PACKAGES += android.hardware.camera.provider@2.4-external-service \
-                    android.hardware.camera.provider@2.4-service_64 \
-                    android.hardware.camera.provider@2.4-impl
+PRODUCT_PACKAGES += android.vendor.hardware.camera.provider-V1-external-service
+
 #VHAL camera
 PRODUCT_PACKAGES += camera.$(TARGET_BOARD_PLATFORM) \
                     camera.$(TARGET_BOARD_PLATFORM).jpeg
@@ -583,7 +584,12 @@ PRODUCT_COPY_FILES += \
 	$(INTEL_PATH_COMMON)/thermal/thermal-daemon/thermal-cpu-cdev-order.xml:/vendor/etc/thermal-daemon/thermal-cpu-cdev-order.xml
 
 # Thermal Hal
-PRODUCT_PACKAGES += android.hardware.thermal@2.0-service.intel
+PRODUCT_PACKAGES += android.hardware.thermal@aidl-service.intel
+##############################################################
+# Source: device/intel/mixins/groups/net/common/product.mk
+##############################################################
+PRODUCT_PACKAGES += \
+    NetworkConfigOverlay 
 ##############################################################
 # Source: device/intel/mixins/groups/debug-crashlogd/true/product.mk
 ##############################################################
@@ -748,4 +754,9 @@ PRODUCT_DEFAULT_PROPERTY_OVERRIDES += vendor.sys.dump.peer_depth=3
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += vendor.sys.dump.stacks_timeout=1500
 
 endif
+##############################################################
+# Source: device/intel/mixins/groups/ipp/default/product.mk
+##############################################################
+PRODUCT_PACKAGES += libippcustom \
+                    libippcustom_vendor
 # ------------------ END MIX-IN DEFINITIONS ------------------
